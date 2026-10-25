@@ -1,0 +1,24 @@
+# Virtual Environment
+venv/
+.env
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.ipynb_checkpoints/
+
+# Data (large binary datasets - generated or downloaded on demand)
+data/
+*.pkl
+*.parquet
+*.csv
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# OS specific
+.DS_Store
+Thumbs.db
