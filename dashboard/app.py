@@ -1,6 +1,6 @@
 """
-Microsoft Defender for FinTech - Fraud Protection & Regulatory Compliance Console.
-Engineered using Microsoft Fluent Design System principles: minimalist, authentic,
+FraudShield - Enterprise Fraud Protection & Regulatory Compliance Console.
+Engineered with clean enterprise Fluent Design: minimalist, authentic,
 institutional-grade risk assessment, and zero AI-generated clichés.
 """
 
@@ -14,8 +14,8 @@ import joblib
 
 # Page Configuration
 st.set_page_config(
-    page_title="Microsoft Defender for FinTech | Fraud & Compliance Hub",
-    page_icon="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg",
+    page_title="FraudShield | Enterprise Risk & Compliance Hub",
+    page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
@@ -30,7 +30,7 @@ from explainability import FraudExplainer
 from investigator_llm import generate_llm_dossier
 from rag.engine import rag_pipeline
 
-# Microsoft Fluent Design System (Azure / Defender Enterprise Theme)
+# Fluent Design System (Enterprise Theme)
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;500;600;700&display=swap');
@@ -48,7 +48,7 @@ st.markdown("""
         max-width: 1300px !important;
     }
 
-    /* Top Shell / Microsoft Portal Header */
+    /* Top Shell / Enterprise Portal Header */
     .ms-header {
         background-color: #ffffff;
         border: 1px solid #edebe9;
@@ -300,20 +300,19 @@ scale_model, scale_feats, m_real, m_1m = load_all_artifacts()
 st.markdown("""
 <div class="ms-header">
     <div class="ms-logo-title">
-        <div class="ms-logo-grid">
-            <div class="ms-tile-red"></div>
-            <div class="ms-tile-green"></div>
-            <div class="ms-tile-blue"></div>
-            <div class="ms-tile-yellow"></div>
+        <div style="display:flex; align-items:center; justify-content:center; width:28px; height:28px; background:#0078d4; border-radius:4px; color:#ffffff;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
         </div>
         <div>
-            <span class="ms-title-text">Microsoft Defender</span>
+            <span class="ms-title-text">FraudShield</span>
             <span class="ms-title-separator">|</span>
-            <span class="ms-portal-name">FinTech Fraud Protection & Compliance</span>
+            <span class="ms-portal-name">Enterprise Risk & Compliance Operations</span>
         </div>
     </div>
     <div class="ms-header-meta">
-        <span><span class="ms-status-dot"></span>Operational (Azure US-East)</span>
+        <span><span class="ms-status-dot"></span>Production Cluster (US-East)</span>
         <span>•</span>
         <span>Engine: Cost-Weighted XGBoost v2.4</span>
         <span>•</span>
@@ -322,11 +321,11 @@ st.markdown("""
 </div>
 
 <div class="ms-breadcrumb">
-    <a href="#">Microsoft Defender</a> / <a href="#">Fraud & Risk Services</a> / <span>Real-Time Incident Assessment & SAR Compliance</span>
+    <a href="#">FraudShield</a> / <a href="#">Risk Operations</a> / <span>Real-Time Incident Assessment & SAR Compliance</span>
 </div>
 """, unsafe_allow_html=True)
 
-# 2. Executive Performance Telemetry (Microsoft Azure KPI Tiles)
+# 2. Executive Performance Telemetry (KPI Summary Tiles)
 k1, k2, k3, k4 = st.columns(4)
 
 with k1:
@@ -383,7 +382,7 @@ if "vel" not in st.session_state:
 if "hour" not in st.session_state:
     st.session_state.hour = 3
 
-# 3. Quick-Load Telemetry Scenarios (Microsoft Fluent Command Bar)
+# 3. Quick-Load Telemetry Scenarios (Command Bar Action Buttons)
 st.markdown("""
 <div class="ms-card" style="margin-bottom: 12px; padding: 12px 16px;">
     <div style="font-size: 0.82rem; font-weight: 600; color: #605e5c; margin-bottom: 8px;">
@@ -519,7 +518,7 @@ if scale_model and scale_feats:
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M8 1L10.163 5.382L15 6.09L11.5 9.502L12.326 14.318L8 12.045L3.674 14.318L4.5 9.502L1 6.09L5.837 5.382L8 1Z" fill="#0078D4"/>
             </svg>
-            <span>Microsoft Security Copilot &bull; Incident Assessment</span>
+            <span>Risk Assessment Engine &bull; Incident Briefing</span>
         </div>
     """, unsafe_allow_html=True)
 
@@ -672,6 +671,6 @@ if scale_model and scale_feats:
 # Footer
 st.markdown("""
 <div style="text-align: center; font-size: 0.75rem; color: #a19f9d; margin-top: 32px; border-top: 1px solid #edebe9; padding-top: 12px;">
-    Microsoft Defender for FinTech &bull; Production Security Graph &bull; Zero Trust Financial Telemetry
+    FraudShield Enterprise &bull; Production Risk Graph &bull; Zero Trust Financial Telemetry
 </div>
 """, unsafe_allow_html=True)
