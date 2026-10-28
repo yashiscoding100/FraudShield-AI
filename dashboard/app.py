@@ -2,6 +2,7 @@
 FraudShield - Enterprise Fraud Protection & Regulatory Compliance Console.
 Engineered with clean enterprise Fluent Design: minimalist, authentic,
 institutional-grade risk assessment, and zero AI-generated clichés.
+Features an interactive first-time visitor / recruiter onboarding walkthrough.
 """
 
 import os
@@ -54,7 +55,7 @@ st.markdown("""
         border: 1px solid #edebe9;
         border-radius: 4px;
         padding: 12px 20px;
-        margin-bottom: 16px;
+        margin-bottom: 14px;
         box-shadow: 0 1.6px 3.6px 0 rgba(0,0,0,0.06), 0 0.3px 0.9px 0 rgba(0,0,0,0.04);
         display: flex;
         justify-content: space-between;
@@ -67,17 +68,6 @@ st.markdown("""
         align-items: center;
         gap: 12px;
     }
-    .ms-logo-grid {
-        display: inline-grid;
-        grid-template-columns: 9px 9px;
-        grid-template-rows: 9px 9px;
-        gap: 2px;
-    }
-    .ms-tile-red { background-color: #f25022; width: 9px; height: 9px; }
-    .ms-tile-green { background-color: #7fba00; width: 9px; height: 9px; }
-    .ms-tile-blue { background-color: #00a4ef; width: 9px; height: 9px; }
-    .ms-tile-yellow { background-color: #ffb900; width: 9px; height: 9px; }
-    
     .ms-title-text {
         font-size: 1.15rem;
         font-weight: 600;
@@ -121,6 +111,74 @@ st.markdown("""
     }
     .ms-breadcrumb a:hover {
         text-decoration: underline;
+    }
+
+    /* Interactive Game Tutorial / Guided Walkthrough */
+    .tutorial-container {
+        background-color: #ffffff;
+        border: 1px solid #0078d4;
+        border-radius: 4px;
+        padding: 16px 20px;
+        margin-bottom: 18px;
+        box-shadow: 0 3px 8px rgba(0, 120, 212, 0.12);
+    }
+    .tutorial-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #edebe9;
+    }
+    .tutorial-title {
+        font-size: 0.96rem;
+        font-weight: 700;
+        color: #0078d4;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .tutorial-callout {
+        background-color: #eff6fc;
+        border: 1px solid #c7e0f4;
+        border-left: 4px solid #0078d4;
+        border-radius: 4px;
+        padding: 9px 14px;
+        margin-bottom: 12px;
+        font-size: 0.82rem;
+        color: #201f1e;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .tutorial-step-badge {
+        background-color: #0078d4;
+        color: #ffffff;
+        font-size: 0.7rem;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 3px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+    }
+    .tutorial-card {
+        background-color: #faf9f8;
+        border: 1px solid #edebe9;
+        border-radius: 4px;
+        padding: 12px 14px;
+        height: 100%;
+    }
+    .tutorial-card-title {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #0078d4;
+        margin-bottom: 4px;
+    }
+    .tutorial-card-desc {
+        font-size: 0.78rem;
+        color: #323130;
+        line-height: 1.4;
     }
 
     /* Fluent Card */
@@ -172,6 +230,31 @@ st.markdown("""
         font-size: 0.75rem;
         color: #605e5c;
         line-height: 1.35;
+    }
+
+    /* Scenario Card */
+    .scenario-btn-box {
+        background-color: #ffffff;
+        border: 1px solid #edebe9;
+        border-radius: 4px;
+        padding: 12px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+    .scenario-title {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #201f1e;
+        margin-bottom: 4px;
+    }
+    .scenario-desc {
+        font-size: 0.75rem;
+        color: #605e5c;
+        line-height: 1.35;
+        margin-bottom: 10px;
     }
 
     /* Copilot Minimalist Panel */
@@ -230,7 +313,7 @@ st.markdown("""
     div.stButton > button {
         border-radius: 4px !important;
         font-family: 'Segoe UI', sans-serif !important;
-        font-size: 0.85rem !important;
+        font-size: 0.84rem !important;
         font-weight: 600 !important;
         border: 1px solid #8a8886 !important;
         background-color: #ffffff !important;
@@ -296,36 +379,148 @@ def load_all_artifacts():
 
 scale_model, scale_feats, m_real, m_1m = load_all_artifacts()
 
+# Initialize Session State
+if "amt" not in st.session_state:
+    st.session_state.amt = 4900.0
+if "bal" not in st.session_state:
+    st.session_state.bal = 5000.0
+if "type" not in st.session_state:
+    st.session_state.type = "TRANSFER"
+if "dist" not in st.session_state:
+    st.session_state.dist = 3200.0
+if "pins" not in st.session_state:
+    st.session_state.pins = 2
+if "vel" not in st.session_state:
+    st.session_state.vel = 6
+if "hour" not in st.session_state:
+    st.session_state.hour = 3
+if "show_guide" not in st.session_state:
+    st.session_state.show_guide = True  # Default open for first-time recruiters
+
 # 1. Top Enterprise Portal Navigation Bar
-st.markdown("""
-<div class="ms-header">
-    <div class="ms-logo-title">
-        <div style="display:flex; align-items:center; justify-content:center; width:28px; height:28px; background:#0078d4; border-radius:4px; color:#ffffff;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            </svg>
+h_col1, h_col2 = st.columns([3, 1])
+with h_col1:
+    st.markdown("""
+    <div class="ms-header">
+        <div class="ms-logo-title">
+            <div style="display:flex; align-items:center; justify-content:center; width:28px; height:28px; background:#0078d4; border-radius:4px; color:#ffffff;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+            </div>
+            <div>
+                <span class="ms-title-text">FraudShield</span>
+                <span class="ms-title-separator">|</span>
+                <span class="ms-portal-name">Enterprise Risk & Compliance Operations</span>
+            </div>
         </div>
-        <div>
-            <span class="ms-title-text">FraudShield</span>
-            <span class="ms-title-separator">|</span>
-            <span class="ms-portal-name">Enterprise Risk & Compliance Operations</span>
+        <div class="ms-header-meta">
+            <span><span class="ms-status-dot"></span>Production Cluster (US-East)</span>
+            <span>•</span>
+            <span>Engine: Cost-Weighted XGBoost v2.4</span>
+            <span>•</span>
+            <span>SLA: &lt; 15ms</span>
         </div>
     </div>
-    <div class="ms-header-meta">
-        <span><span class="ms-status-dot"></span>Production Cluster (US-East)</span>
-        <span>•</span>
-        <span>Engine: Cost-Weighted XGBoost v2.4</span>
-        <span>•</span>
-        <span>SLA: &lt; 15ms</span>
+    <div class="ms-breadcrumb">
+        <a href="#">FraudShield</a> / <a href="#">Risk Operations</a> / <span>Real-Time Incident Assessment & SAR Compliance</span>
     </div>
-</div>
+    """, unsafe_allow_html=True)
 
-<div class="ms-breadcrumb">
-    <a href="#">FraudShield</a> / <a href="#">Risk Operations</a> / <span>Real-Time Incident Assessment & SAR Compliance</span>
-</div>
-""", unsafe_allow_html=True)
+with h_col2:
+    tour_label = "Hide Tutorial Guide" if st.session_state.show_guide else "Show Interactive Tour Guide"
+    if st.button(f"🧭 {tour_label}", key="toggle_tour_btn", use_container_width=True):
+        st.session_state.show_guide = not st.session_state.show_guide
+        st.rerun()
 
-# 2. Executive Performance Telemetry (KPI Summary Tiles)
+# 2. Interactive "Video Game Style" Onboarding Walkthrough (Shown to First-Time Reviewers)
+if st.session_state.show_guide:
+    st.markdown("""
+    <div class="tutorial-container">
+        <div class="tutorial-header">
+            <div class="tutorial-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0078d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                <span>Interactive Recruiter & Reviewer Guided Tour</span>
+            </div>
+            <span style="font-size: 0.75rem; color: #605e5c; font-weight: 600;">NEW USER ONBOARDING MODE ACTIVE</span>
+        </div>
+        <div style="font-size: 0.84rem; color: #323130; margin-bottom: 12px; line-height: 1.45;">
+            Welcome to <strong>FraudShield</strong>. This system simulates a high-throughput bank fraud security engine that evaluates financial payments in <strong>under 15 milliseconds</strong>. Follow the 4-step mission below to test how the AI intercepts cyberattacks and files legal compliance reports:
+        </div>
+    """, unsafe_allow_html=True)
+
+    t1, t2, t3, t4 = st.columns(4)
+    with t1:
+        st.markdown("""
+        <div class="tutorial-card">
+            <div class="tutorial-card-title">1. Review System KPIs</div>
+            <div class="tutorial-card-desc">
+                Inspect the 4 benchmark tiles below. Notice <strong>PR-AUC (0.8081)</strong>, which measures how accurately the model catches rare 0.17% fraud attacks without false alarms.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with t2:
+        st.markdown("""
+        <div class="tutorial-card">
+            <div class="tutorial-card-title">2. Choose a Scenario</div>
+            <div class="tutorial-card-desc">
+                Click any of the 4 Quick-Load buttons (e.g., <strong>Account Takeover</strong> or <strong>Card Testing Bot</strong>) to auto-fill realistic cyberattack telemetry.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with t3:
+        st.markdown("""
+        <div class="tutorial-card">
+            <div class="tutorial-card-title">3. Click Evaluate</div>
+            <div class="tutorial-card-desc">
+                Press the blue <strong>"Evaluate Transaction"</strong> button. The cost-weighted XGBoost model runs vectorized inference in &lt;15ms.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with t4:
+        st.markdown("""
+        <div class="tutorial-card">
+            <div class="tutorial-card-title">4. Inspect Copilot & RAG</div>
+            <div class="tutorial-card-desc">
+                View the <strong>Action Verdict</strong>, the physical risk triggers, and the <strong>RAG Copilot</strong> that automatically drafts a federal FinCEN SAR legal filing.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    # Technical Glossary Expander
+    with st.expander("📖 Plain-English Technical Glossary (What do these terms mean?)", expanded=False):
+        g1, g2 = st.columns(2)
+        with g1:
+            st.markdown("""
+            * **PR-AUC (Precision-Recall Area Under Curve):** Why not standard accuracy? In fraud, 99.8% of transactions are legitimate. A dummy model that approves everything gets 99.8% accuracy but catches zero fraud! PR-AUC measures exact precision on the rare 0.17% fraud needles.
+            * **TreeSHAP Explainability:** Game-theory algorithm that mathematically proves *why* the AI flagged a transaction, satisfying federal "Adverse Action Notice" laws (FCRA & ECOA).
+            * **Cost-Sensitive Learning (`scale_pos_weight=578.55`):** Tells the AI that missing a $5,000 fraud attack is 500x more costly than making a mistake on a $2 coffee.
+            """)
+        with g2:
+            st.markdown("""
+            * **Isotonic Calibration (PAVA):** Raw ML models are often overconfident. Isotonic regression maps raw scores into true real-world probabilities.
+            * **Impossible Travel:** Detects when a card is used in New York and Paris 10 minutes apart—physically impossible without stolen credentials.
+            * **FinCEN SAR (Form 111):** Under the Bank Secrecy Act (31 CFR § 1020.320), banks are legally mandated to report suspicious activity over $2,000 to the federal government within 30 days.
+            """)
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+# 3. Executive Performance Telemetry (KPI Summary Tiles)
+if st.session_state.show_guide:
+    st.markdown("""
+    <div class="tutorial-callout">
+        <span class="tutorial-step-badge">STEP 1</span>
+        <span><strong>Production Benchmarks:</strong> These 4 cards show model performance on 284,807 European payment records with 0.172% extreme class imbalance:</span>
+    </div>
+    """, unsafe_allow_html=True)
+
 k1, k2, k3, k4 = st.columns(4)
 
 with k1:
@@ -366,35 +561,27 @@ with k4:
 
 st.write("")
 
-# Initialize Session State
-if "amt" not in st.session_state:
-    st.session_state.amt = 4900.0
-if "bal" not in st.session_state:
-    st.session_state.bal = 5000.0
-if "type" not in st.session_state:
-    st.session_state.type = "TRANSFER"
-if "dist" not in st.session_state:
-    st.session_state.dist = 3200.0
-if "pins" not in st.session_state:
-    st.session_state.pins = 2
-if "vel" not in st.session_state:
-    st.session_state.vel = 6
-if "hour" not in st.session_state:
-    st.session_state.hour = 3
-
-# 3. Quick-Load Telemetry Scenarios (Command Bar Action Buttons)
-st.markdown("""
-<div class="ms-card" style="margin-bottom: 12px; padding: 12px 16px;">
-    <div style="font-size: 0.82rem; font-weight: 600; color: #605e5c; margin-bottom: 8px;">
-        LOAD TELEMETRY PROFILE:
+# 4. Quick-Load Telemetry Scenarios
+if st.session_state.show_guide:
+    st.markdown("""
+    <div class="tutorial-callout">
+        <span class="tutorial-step-badge">STEP 2</span>
+        <span><strong>Choose a Test Scenario:</strong> Click any of the 4 buttons below. Each button simulates a distinct cyberattack pattern or normal spending habit:</span>
     </div>
-</div>
-""", unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
 b1, b2, b3, b4 = st.columns(4)
 
 with b1:
-    if st.button("Sample: Account Takeover (ATO)", key="btn_ato", use_container_width=True):
+    st.markdown("""
+    <div class="scenario-btn-box">
+        <div>
+            <div class="scenario-title">1. Account Takeover (ATO)</div>
+            <div class="scenario-desc">Hacker drains 98% savings ($4,900) via wire transfer at 3 AM from 3,200 km away with 2 failed PINs.</div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    if st.button("Load 'Account Takeover' Test", key="btn_ato", use_container_width=True):
         st.session_state.amt = 4900.0
         st.session_state.bal = 5000.0
         st.session_state.type = "TRANSFER"
@@ -404,7 +591,15 @@ with b1:
         st.session_state.hour = 3
 
 with b2:
-    if st.button("Sample: Card Testing Bot", key="btn_bot", use_container_width=True):
+    st.markdown("""
+    <div class="scenario-btn-box">
+        <div>
+            <div class="scenario-title">2. Card Testing Bot</div>
+            <div class="scenario-desc">Automated script liquidating cash ($2,100) with 3 wrong PIN attempts and 8 rapid transactions in an hour.</div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    if st.button("Load 'Card Testing Bot' Test", key="btn_bot", use_container_width=True):
         st.session_state.amt = 2100.0
         st.session_state.bal = 3500.0
         st.session_state.type = "CASH_OUT"
@@ -414,7 +609,15 @@ with b2:
         st.session_state.hour = 4
 
 with b3:
-    if st.button("Sample: Routine In-Store Purchase", key="btn_lunch", use_container_width=True):
+    st.markdown("""
+    <div class="scenario-btn-box">
+        <div>
+            <div class="scenario-title">3. Routine In-Store Purchase</div>
+            <div class="scenario-desc">Cardholder buys a $45 meal at 1 PM, 3.5 km from home, with 0 failed PINs and healthy savings remaining.</div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    if st.button("Load 'Routine Purchase' Test", key="btn_lunch", use_container_width=True):
         st.session_state.amt = 45.0
         st.session_state.bal = 2800.0
         st.session_state.type = "PAYMENT"
@@ -424,7 +627,15 @@ with b3:
         st.session_state.hour = 13
 
 with b4:
-    if st.button("Sample: High-Value Travel Booking", key="btn_flight", use_container_width=True):
+    st.markdown("""
+    <div class="scenario-btn-box">
+        <div>
+            <div class="scenario-title">4. High-Value Travel Booking</div>
+            <div class="scenario-desc">Legitimate $850 airline ticket. High dollar amount, but normal location and 0 failed PINs prove authenticity.</div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    if st.button("Load 'Travel Booking' Test", key="btn_flight", use_container_width=True):
         st.session_state.amt = 850.0
         st.session_state.bal = 6200.0
         st.session_state.type = "PAYMENT"
@@ -435,13 +646,21 @@ with b4:
 
 st.write("")
 
-# 4. Transaction Parameters Cockpit
+# 5. Transaction Parameters Cockpit
+if st.session_state.show_guide:
+    st.markdown("""
+    <div class="tutorial-callout">
+        <span class="tutorial-step-badge">STEP 3</span>
+        <span><strong>Review Telemetry Inputs:</strong> These 7 fields represent live checkout signals. You can keep the loaded scenario values or adjust them:</span>
+    </div>
+    """, unsafe_allow_html=True)
+
 with st.container():
     st.markdown("""
     <div class="ms-card">
         <div class="ms-card-header">
             <span>Transaction Telemetry Parameters</span>
-            <span style="font-size: 0.75rem; color: #605e5c; font-weight: 400;">Specify monetary, routing, and credential features</span>
+            <span style="font-size: 0.75rem; color: #605e5c; font-weight: 400;">Payload features collected during payment authorization</span>
         </div>
     """, unsafe_allow_html=True)
     
@@ -449,27 +668,33 @@ with st.container():
     
     with in_c1:
         st.markdown("<div style='font-size:0.8rem; font-weight:600; color:#323130; margin-bottom:4px;'>Monetary Exposure</div>", unsafe_allow_html=True)
-        amt_val = st.number_input("Transaction Amount ($)", min_value=1.0, max_value=100000.0, value=float(st.session_state.amt), step=50.0)
-        bal_val = st.number_input("Available Account Balance ($)", min_value=1.0, max_value=250000.0, value=float(st.session_state.bal), step=100.0)
+        amt_val = st.number_input("Transaction Amount ($)", min_value=1.0, max_value=100000.0, value=float(st.session_state.amt), step=50.0, help="Dollar amount being charged.")
+        bal_val = st.number_input("Available Account Balance ($)", min_value=1.0, max_value=250000.0, value=float(st.session_state.bal), step=100.0, help="Customer total savings in bank.")
 
     with in_c2:
         st.markdown("<div style='font-size:0.8rem; font-weight:600; color:#323130; margin-bottom:4px;'>Routing & Geolocation</div>", unsafe_allow_html=True)
         type_options = ["TRANSFER", "PAYMENT", "CASH_OUT", "DEBIT", "CASH_IN"]
         type_idx = type_options.index(st.session_state.type) if st.session_state.type in type_options else 0
-        type_val = st.selectbox("Transaction Channel", type_options, index=type_idx)
-        dist_val = st.number_input("Geodetic Distance from Home (km)", min_value=0.0, max_value=25000.0, value=float(st.session_state.dist), step=25.0)
+        type_val = st.selectbox("Transaction Channel", type_options, index=type_idx, help="TRANSFER & CASH_OUT carry highest liquidation risk.")
+        dist_val = st.number_input("Geodetic Distance from Home (km)", min_value=0.0, max_value=25000.0, value=float(st.session_state.dist), step=25.0, help="Distance from billing address. >800 km triggers Impossible Travel.")
 
     with in_c3:
         st.markdown("<div style='font-size:0.8rem; font-weight:600; color:#323130; margin-bottom:4px;'>Authentication & Velocity</div>", unsafe_allow_html=True)
-        pins_val = st.number_input("Failed PIN / Password Attempts", min_value=0, max_value=5, value=int(st.session_state.pins), step=1)
-        vel_val = st.number_input("Prior 1-Hour Velocity (Txns)", min_value=0, max_value=25, value=int(st.session_state.vel), step=1)
-        hour_val = st.slider("Transaction Hour (UTC: 00:00 - 23:00)", 0, 23, int(st.session_state.hour))
+        pins_val = st.number_input("Failed PIN / Password Attempts", min_value=0, max_value=5, value=int(st.session_state.pins), step=1, help="2+ wrong PIN attempts indicates password guessing / brute-force.")
+        vel_val = st.number_input("Prior 1-Hour Velocity (Txns)", min_value=0, max_value=25, value=int(st.session_state.vel), step=1, help="Robots typically execute 5 to 15 rapid purchases within an hour.")
+        hour_val = st.slider("Transaction Hour (UTC: 00:00 - 23:00)", 0, 23, int(st.session_state.hour), help="3 AM transactions carry higher statistical risk than 2 PM.")
 
     st.write("")
+    if st.session_state.show_guide:
+        st.markdown("""
+        <div style="font-size: 0.78rem; color: #0078d4; font-weight: 600; margin-bottom: 6px;">
+            🎮 STEP 4: CLICK THE BUTTON BELOW TO EXECUTE REAL-TIME INFERENCE:
+        </div>
+        """, unsafe_allow_html=True)
     run_btn = st.button("Evaluate Transaction", type="primary", use_container_width=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
-# 5. Inference & Minimalist Copilot Assessment
+# 6. Inference & Minimalist Copilot Assessment
 if scale_model and scale_feats:
     new_bal = max(0.0, bal_val - amt_val)
     b_drain = (bal_val - new_bal) / (bal_val + 1.0)
@@ -510,6 +735,14 @@ if scale_model and scale_feats:
 
     pred_prob = float(scale_model.predict_proba(eval_df)[0, 1])
     risk_score = round(pred_prob * 100.0, 1)
+
+    if st.session_state.show_guide:
+        st.markdown("""
+        <div class="tutorial-callout">
+            <span class="tutorial-step-badge">STEP 5</span>
+            <span><strong>Automated Copilot Verdict & RAG Compliance:</strong> Here is the real-time AI decision, transparent risk triggers, and statutory SAR legal filing:</span>
+        </div>
+        """, unsafe_allow_html=True)
 
     # Minimalist Copilot Panel
     st.markdown("""
@@ -575,7 +808,7 @@ if scale_model and scale_feats:
 
     st.markdown("</div>", unsafe_allow_html=True)
 
-    # 6. Detailed Telemetry Table & Regulatory RAG Integration
+    # 7. Detailed Telemetry Table & Regulatory RAG Integration
     c_tab1, c_tab2 = st.tabs(["Telemetry Metrics & Baselines", "Regulatory Compliance & SAR Filing (RAG)"])
 
     with c_tab1:
